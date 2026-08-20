@@ -1,36 +1,27 @@
-import { Container } from '@/components/ui/Container';
-import { Button } from '@/components/ui/Button';
-import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import dynamic from 'next/dynamic';
+
+// HeroSection uses Three.js and must be client-rendered
+const HeroSection = dynamic(
+  () => import('@/components/hero/HeroSection').then((mod) => ({ default: mod.HeroSection })),
+  { ssr: false }
+);
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col">
-      {/* Theme toggle in top-right corner */}
-      <div className="fixed top-6 right-6 z-50">
-        <ThemeToggle />
-      </div>
+    <>
+      <HeroSection />
 
-      <Container
-        size="lg"
-        className="flex-1 flex flex-col items-center justify-center py-24"
-      >
-        <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight">
-            1<span className="text-gradient">Plus</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-[var(--text-secondary)] mb-12 leading-relaxed">
-            Premium Creative Digital Studio
+      {/* Additional sections will be added below */}
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-3xl mx-auto px-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Our <span className="text-gradient">Work</span>
+          </h2>
+          <p className="text-lg text-[var(--text-secondary)]">
+            Portfolio section coming soon.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="primary" size="lg">
-              View Portfolio
-            </Button>
-            <Button variant="secondary" size="lg">
-              Contact Us
-            </Button>
-          </div>
         </div>
-      </Container>
-    </main>
+      </section>
+    </>
   );
 }
