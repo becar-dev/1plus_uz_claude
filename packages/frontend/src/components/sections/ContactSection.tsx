@@ -6,6 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Button } from '@/components/ui/Button';
 import { Mail, Send, ArrowUpRight } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/api';
 
 interface FormData {
   name: string;
@@ -74,16 +75,23 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      // Placeholder API endpoint
-      await fetch('/api/contact', {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || 'Failed to send message');
+      }
+
       setIsSubmitted(true);
       setFormData({ name: '', email: '', message: '' });
-    } catch {
-      // Silently handle errors for now
+    } catch (err) {
+      setErrors({
+        message: err instanceof Error ? err.message : 'Failed to send message. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }

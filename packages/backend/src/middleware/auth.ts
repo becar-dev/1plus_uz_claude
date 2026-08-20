@@ -16,7 +16,12 @@ export function authMiddleware(req: AuthRequest, res: Response, next: NextFuncti
   const token = authHeader.split(' ')[1];
 
   try {
-    const secret = process.env.JWT_SECRET || 'default-secret';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error('FATAL: JWT_SECRET environment variable is not set');
+      res.status(500).json({ success: false, error: 'Internal server error' });
+      return;
+    }
     const decoded = jwt.verify(token, secret) as { userId: string };
     req.userId = decoded.userId;
     next();

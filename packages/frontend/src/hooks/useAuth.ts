@@ -7,6 +7,7 @@ import {
   logout as authLogout,
   getToken,
   getUser,
+  isAuthenticated,
   type AuthUser,
 } from '@/lib/auth';
 
@@ -32,6 +33,7 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check existing auth state on mount (getToken validates expiry)
     const existingToken = getToken();
     const existingUser = getUser();
     if (existingToken && existingUser) {
@@ -73,6 +75,7 @@ export function useAuth(): UseAuthReturn {
 
 /**
  * Hook that redirects to login if not authenticated.
+ * Returns auth state once verified.
  */
 export function useRequireAuth(): UseAuthReturn {
   const auth = useAuth();

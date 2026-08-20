@@ -17,6 +17,7 @@ interface HeroCanvasProps {
 /**
  * Three.js canvas component for the hero section.
  * Sets up WebGL renderer, scene, camera, and animation loop.
+ * Pauses rendering when off-screen or when tab is hidden to save GPU.
  * Must be client component with dynamic import (ssr: false).
  */
 export function HeroCanvas({
@@ -34,6 +35,8 @@ export function HeroCanvas({
   const particlesRef = useRef<ParticleField | null>(null);
   const clockRef = useRef(new THREE.Clock());
   const frameRef = useRef<number | null>(null);
+  const isVisibleRef = useRef(true);
+  const isTabVisibleRef = useRef(true);
   const { theme } = useTheme();
   const prevThemeRef = useRef(theme);
 
@@ -42,18 +45,21 @@ export function HeroCanvas({
   const mouseYRef = useRef(mouseY);
   const scrollRef = useRef(scrollProgress);
 
+  // Update refs on prop changes (no re-render trigger for the animation loop)
   useEffect(() => { mouseXRef.current = mouseX; }, [mouseX]);
   useEffect(() => { mouseYRef.current = mouseY; }, [mouseY]);
   useEffect(() => { scrollRef.current = scrollProgress; }, [scrollProgress]);
 
-  // Initialize scene once on mount
+  // Initialize scene once
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Scene
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
+    // Camera
     const camera = new THREE.PerspectiveCamera(
       50,
       canvas.clientWidth / canvas.clientHeight,
@@ -63,6 +69,7 @@ export function HeroCanvas({
     camera.position.z = 6;
     cameraRef.current = camera;
 
+    // Renderer
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: !isLowEnd,
@@ -90,27 +97,28 @@ export function HeroCanvas({
     pointLightMagenta.position.set(3, -1, 2);
     scene.add(pointLightMagenta);
 
-    // Logo geometry
-    const currentTheme = prevThemeRef.current;
-    const logo = new LogoMesh({ theme: currentTheme });
+    // Logo
+    const logo = new LogoMesh({ theme });
     logoRef.current = logo;
     scene.add(logo.group);
 
-    // Particle field
+    // Particles
     const particleCount = isLowEnd ? 200 : 600;
     const particles = new ParticleField({
       count: particleCount,
-      theme: currentTheme,
+      theme,
       reducedMotion,
     });
     particlesRef.current = particles;
     scene.add(particles.points);
 
-    // Resize handler
+    // Handle resize
     const handleResize = () => {
       if (!canvas || !cameraRef.current || !rendererRef.current) return;
+
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
+
       cameraRef.current.aspect = width / height;
       cameraRef.current.updateProjectionMatrix();
       rendererRef.current.setSize(width, height);
@@ -118,8 +126,14 @@ export function HeroCanvas({
 
     window.addEventListener('resize', handleResize);
 
-    // Animation loop reads from refs so it never needs to be recreated
+    // Animation loop - reads from refs so it never needs to be recreated
+    // Pauses when canvas is off-screen or tab is hidden
     const animate = () => {
+      if (!isVisibleRef.current || !isTabVisibleRef.current) {
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       const time = clockRef.current.getElapsedTime();
 
       if (logoRef.current) {
@@ -143,8 +157,29 @@ export function HeroCanvas({
 
     frameRef.current = requestAnimationFrame(animate);
 
+    // IntersectionObserver to pause when canvas is off-screen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisibleRef.current = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
+    // Pause rendering when tab is hidden
+    const handleVisibilityChange = () => {
+      isTabVisibleRef.current = document.visibilityState === 'visible';
+      if (isTabVisibleRef.current) {
+        // Reset clock delta to prevent time jump when resuming
+        clockRef.current.getDelta();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      observer.disconnect();
       if (frameRef.current !== null) {
         cancelAnimationFrame(frameRef.current);
       }
@@ -152,10 +187,11 @@ export function HeroCanvas({
       particlesRef.current?.dispose();
       renderer.dispose();
     };
+    // Only run once on mount - isLowEnd and reducedMotion are stable after initial detection
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handle theme transitions
+  // Handle theme transitions (smooth color interpolation)
   useEffect(() => {
     if (prevThemeRef.current !== theme) {
       logoRef.current?.transitionTheme(theme, 0.6);
@@ -164,7 +200,7 @@ export function HeroCanvas({
     }
   }, [theme]);
 
-  // Update reduced motion
+  // Update reduced motion preference
   useEffect(() => {
     particlesRef.current?.setReducedMotion(reducedMotion);
   }, [reducedMotion]);

@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Custom cursor for desktop: small dot + larger circle following with delay.
  * Grows on buttons/links, hidden on touch devices.
  * Disabled when prefers-reduced-motion is set.
+ * Cursor hiding is scoped to the site shell only, not globally.
  */
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -16,10 +17,6 @@ export function CustomCursor() {
   const posRef = useRef({ x: 0, y: 0 });
   const circlePos = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>(0);
-
-  const updateVisibility = useCallback((visible: boolean) => {
-    setIsVisible(visible);
-  }, []);
 
   useEffect(() => {
     // Check if touch device
@@ -44,11 +41,15 @@ export function CustomCursor() {
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
       }
-      updateVisibility(true);
+      if (!isVisible) setIsVisible(true);
+    }
+
+    function handleMouseEnter() {
+      setIsVisible(true);
     }
 
     function handleMouseLeave() {
-      updateVisibility(false);
+      setIsVisible(false);
     }
 
     function animateCircle() {
@@ -73,6 +74,7 @@ export function CustomCursor() {
     }
 
     document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseover', handleMouseOver);
     rafRef.current = requestAnimationFrame(animateCircle);
@@ -85,12 +87,13 @@ export function CustomCursor() {
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseover', handleMouseOver);
       motionQuery.removeEventListener('change', motionHandler);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [updateVisibility]);
+  }, [isVisible]);
 
   if (isDisabled) return null;
 
@@ -110,16 +113,31 @@ export function CustomCursor() {
       {/* Larger circle - follows with delay */}
       <div
         ref={circleRef}
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[10000] mix-blend-difference"
+        className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[10000] mix-blend-difference"
         style={{
           border: '1.5px solid white',
           opacity: isVisible ? 0.6 : 0,
-          transition: 'opacity 0.2s ease, width 0.2s ease, height 0.2s ease',
+          transition: `opacity 0.2s ease, width 0.2s ease, height 0.2s ease`,
           width: isHovering ? '56px' : '40px',
           height: isHovering ? '56px' : '40px',
+          marginLeft: isHovering ? '-8px' : '0px',
+          marginTop: isHovering ? '-8px' : '0px',
         }}
         aria-hidden="true"
       />
+      {/* Hide default cursor only within site shell, not globally */}
+      <style jsx global>{`
+        @media (pointer: fine) and (hover: hover) {
+          #main-content,
+          #main-content *,
+          header nav,
+          header nav *,
+          footer,
+          footer * {
+            cursor: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

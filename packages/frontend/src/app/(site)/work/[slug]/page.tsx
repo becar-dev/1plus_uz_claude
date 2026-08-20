@@ -11,37 +11,67 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { ProjectGallery } from '@/components/portfolio/ProjectGallery';
 import { demoProjects } from '@/data/demoProjects';
-import { fetchProjects } from '@/lib/api';
+import { fetchProjectBySlug, fetchProjects } from '@/lib/api';
 
 /**
  * Individual project detail page.
  * Full-width hero image, project info, image gallery, and prev/next navigation.
+ * Uses direct slug lookup endpoint instead of fetching all projects.
  */
 export default function ProjectDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
 
   const [project, setProject] = useState<Project | null>(null);
-  const [allProjects, setAllProjects] = useState<Project[]>(demoProjects);
+  const [prevProject, setPrevProject] = useState<Project | null>(null);
+  const [nextProject, setNextProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadProject() {
       try {
-        const response = await fetchProjects('published');
-        if (response.success && response.data && response.data.length > 0) {
-          setAllProjects(response.data);
-          const found = response.data.find((p) => p.slug === slug);
-          setProject(found || null);
+        // Fetch single project by slug directly
+        const response = await fetchProjectBySlug(slug);
+        if (response.success && response.data) {
+          setProject(response.data);
+
+          // Fetch published projects for prev/next navigation
+          const allResponse = await fetchProjects('published');
+          if (allResponse.success && allResponse.data) {
+            const projects = allResponse.data;
+            const currentIndex = projects.findIndex((p) => p.slug === slug);
+            setPrevProject(currentIndex > 0 ? projects[currentIndex - 1] : null);
+            setNextProject(
+              currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null
+            );
+          }
         } else {
-          setAllProjects(demoProjects);
+          // Fallback to demo projects
           const found = demoProjects.find((p) => p.slug === slug);
           setProject(found || null);
+          if (found) {
+            const currentIndex = demoProjects.findIndex((p) => p.slug === slug);
+            setPrevProject(currentIndex > 0 ? demoProjects[currentIndex - 1] : null);
+            setNextProject(
+              currentIndex < demoProjects.length - 1
+                ? demoProjects[currentIndex + 1]
+                : null
+            );
+          }
         }
       } catch {
-        setAllProjects(demoProjects);
+        // Fallback to demo projects on error
         const found = demoProjects.find((p) => p.slug === slug);
         setProject(found || null);
+        if (found) {
+          const currentIndex = demoProjects.findIndex((p) => p.slug === slug);
+          setPrevProject(currentIndex > 0 ? demoProjects[currentIndex - 1] : null);
+          setNextProject(
+            currentIndex < demoProjects.length - 1
+              ? demoProjects[currentIndex + 1]
+              : null
+          );
+        }
       } finally {
         setIsLoading(false);
       }
@@ -49,12 +79,6 @@ export default function ProjectDetailPage() {
 
     loadProject();
   }, [slug]);
-
-  // Find prev/next projects
-  const currentIndex = allProjects.findIndex((p) => p.slug === slug);
-  const prevProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
-  const nextProject =
-    currentIndex < allProjects.length - 1 ? allProjects[currentIndex + 1] : null;
 
   if (isLoading) {
     return (

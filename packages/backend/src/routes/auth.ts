@@ -30,7 +30,12 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const secret = process.env.JWT_SECRET || 'default-secret';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error('FATAL: JWT_SECRET environment variable is not set');
+      res.status(500).json({ success: false, error: 'Internal server error' });
+      return;
+    }
     const expiresIn = 86400; // 24 hours in seconds
     const token = jwt.sign({ userId: user.id }, secret, { expiresIn });
 

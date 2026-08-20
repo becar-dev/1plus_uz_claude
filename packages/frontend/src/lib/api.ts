@@ -72,22 +72,12 @@ export async function fetchProject(
 }
 
 /**
- * Fetch a project by slug (uses list endpoint and filters client-side).
+ * Fetch a project by slug (uses the direct /:id endpoint which supports slug lookup).
  */
 export async function fetchProjectBySlug(
   slug: string
 ): Promise<ApiResponse<Project>> {
-  const response = await apiFetch<Project[]>('/projects?status=published');
-  if (!response.success || !response.data) {
-    return { success: false, error: response.error || 'Failed to fetch projects' };
-  }
-
-  const project = response.data.find((p) => p.slug === slug);
-  if (!project) {
-    return { success: false, error: 'Project not found' };
-  }
-
-  return { success: true, data: project };
+  return apiFetch<Project>(`/projects/${slug}`);
 }
 
 export { apiFetch, API_BASE_URL };

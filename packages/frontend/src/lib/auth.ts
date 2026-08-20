@@ -4,6 +4,7 @@ import { API_BASE_URL } from './api';
 
 const TOKEN_KEY = '1plus_admin_token';
 const USER_KEY = '1plus_admin_user';
+const TOKEN_EXPIRY_KEY = '1plus_admin_token_expiry';
 
 export interface AuthUser {
   id: string;
@@ -18,19 +19,29 @@ export interface LoginResponse {
 }
 
 /**
- * Store the JWT token in localStorage
+ * Store the JWT token and its expiry time in localStorage
  */
-export function setToken(token: string): void {
+export function setToken(token: string, expiresIn?: number): void {
   if (typeof window !== 'undefined') {
     localStorage.setItem(TOKEN_KEY, token);
+    if (expiresIn) {
+      const expiryTime = Date.now() + expiresIn * 1000;
+      localStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
+    }
   }
 }
 
 /**
- * Get the JWT token from localStorage
+ * Get the JWT token from localStorage, checking expiry first
  */
 export function getToken(): string | null {
   if (typeof window !== 'undefined') {
+    const expiry = localStorage.getItem(TOKEN_EXPIRY_KEY);
+    if (expiry && Date.now() > parseInt(expiry, 10)) {
+      // Token has expired, clear auth data
+      logout();
+      return null;
+    }
     return localStorage.getItem(TOKEN_KEY);
   }
   return null;
@@ -63,7 +74,7 @@ export function getUser(): AuthUser | null {
 }
 
 /**
- * Check if user is authenticated (has a token)
+ * Check if user is authenticated (has a non-expired token)
  */
 export function isAuthenticated(): boolean {
   return !!getToken();
@@ -86,7 +97,7 @@ export async function login(email: string, password: string): Promise<LoginRespo
   }
 
   const { token, expiresIn, user } = data.data;
-  setToken(token);
+  setToken(token, expiresIn);
   setUser(user);
 
   return { token, expiresIn, user };
@@ -99,5 +110,6 @@ export function logout(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(TOKEN_EXPIRY_KEY);
   }
 }

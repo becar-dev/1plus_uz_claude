@@ -22,18 +22,13 @@ const allowedMimeTypes = [
   'image/png',
   'image/webp',
   'image/gif',
-  'image/svg+xml',
 ];
 
-const fileFilter = (
-  _req: Express.Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback
-) => {
+const fileFilter = (_req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG, WebP, GIF, and SVG are allowed.'));
+    cb(new Error('Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.'));
   }
 };
 
