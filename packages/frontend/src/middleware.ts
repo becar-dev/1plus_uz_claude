@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 /**
  * Server-side middleware to protect /admin routes.
- * Checks for auth token in cookies or Authorization header.
+ * Checks for auth token in the `1plus-admin-token` cookie.
  * Redirects unauthenticated users to /admin/login.
  */
 export function middleware(request: NextRequest) {
@@ -14,17 +14,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for auth token in cookie or localStorage-bridged header
-  const token =
-    request.cookies.get('1plus_admin_token')?.value ||
-    request.headers.get('x-auth-token');
+  // Always check the cookie for the auth token - never skip based on headers
+  const token = request.cookies.get('1plus-admin-token')?.value;
 
-  // Also allow the request to proceed if it appears to be a client-side navigation
-  // (has the Next.js internal headers indicating RSC fetch)
-  const isClientNavigation = request.headers.get('next-router-state-tree');
-
-  if (!token && !isClientNavigation) {
-    // Redirect to login for direct page access without token
+  if (!token) {
+    // Redirect to login for any request without a valid token cookie
     const loginUrl = new URL('/admin/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);

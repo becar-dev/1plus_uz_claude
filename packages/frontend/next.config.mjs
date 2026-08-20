@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
+
+const isDev = process.env.NODE_ENV === 'development';
+const scriptSrc = isDev
+  ? "'self' 'unsafe-inline' 'unsafe-eval'"
+  : "'self' 'unsafe-inline'";
+
 const nextConfig = {
   output: 'standalone',
   transpilePackages: ['@1plus/shared'],
@@ -49,7 +55,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://picsum.photos https://fastly.picsum.photos http://localhost:4000; font-src 'self' data:; connect-src 'self' http://localhost:4000 https://1plus.uz; frame-src 'none'; object-src 'none'; base-uri 'self'",
+            value: `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://picsum.photos https://fastly.picsum.photos http://localhost:4000; font-src 'self' data:; connect-src 'self' http://localhost:4000 https://1plus.uz; frame-src 'none'; object-src 'none'; base-uri 'self'`,
           },
         ],
       },

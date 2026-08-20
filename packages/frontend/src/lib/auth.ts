@@ -5,6 +5,7 @@ import { API_BASE_URL } from './api';
 const TOKEN_KEY = '1plus_admin_token';
 const USER_KEY = '1plus_admin_user';
 const TOKEN_EXPIRY_KEY = '1plus_admin_token_expiry';
+const COOKIE_NAME = '1plus-admin-token';
 
 export interface AuthUser {
   id: string;
@@ -19,7 +20,26 @@ export interface LoginResponse {
 }
 
 /**
- * Store the JWT token and its expiry time in localStorage
+ * Set a cookie accessible to the middleware for auth verification
+ */
+function setAuthCookie(token: string, maxAgeSeconds?: number): void {
+  if (typeof document !== 'undefined') {
+    const maxAge = maxAgeSeconds ? `; max-age=${maxAgeSeconds}` : '';
+    document.cookie = `${COOKIE_NAME}=${token}; path=/; SameSite=Lax${maxAge}`;
+  }
+}
+
+/**
+ * Clear the auth cookie
+ */
+function clearAuthCookie(): void {
+  if (typeof document !== 'undefined') {
+    document.cookie = `${COOKIE_NAME}=; path=/; max-age=0`;
+  }
+}
+
+/**
+ * Store the JWT token and its expiry time in localStorage and set the auth cookie
  */
 export function setToken(token: string, expiresIn?: number): void {
   if (typeof window !== 'undefined') {
@@ -28,6 +48,8 @@ export function setToken(token: string, expiresIn?: number): void {
       const expiryTime = Date.now() + expiresIn * 1000;
       localStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
     }
+    // Bridge token to cookie so middleware can verify it
+    setAuthCookie(token, expiresIn);
   }
 }
 
@@ -111,5 +133,6 @@ export function logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_EXPIRY_KEY);
+    clearAuthCookie();
   }
 }
