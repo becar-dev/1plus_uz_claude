@@ -1,0 +1,213 @@
+/* ==========================================================================
+   1PLUS Design System - CSS Custom Properties
+   CMYK-Inspired Color Palette with Day/Night Theme Support
+   ========================================================================== */
+
+:root {
+  /* ========================================================================
+     CMYK-Inspired Palette
+     ======================================================================== */
+  --color-cyan: #00BCD4;
+  --color-cyan-light: #4DD0E1;
+  --color-cyan-dark: #0097A7;
+  --color-cyan-50: #E0F7FA;
+  --color-cyan-100: #B2EBF2;
+  --color-cyan-200: #80DEEA;
+  --color-cyan-300: #4DD0E1;
+  --color-cyan-400: #26C6DA;
+  --color-cyan-500: #00BCD4;
+  --color-cyan-600: #00ACC1;
+  --color-cyan-700: #0097A7;
+  --color-cyan-800: #00838F;
+  --color-cyan-900: #006064;
+
+  --color-magenta: #E91E63;
+  --color-magenta-light: #F06292;
+  --color-magenta-dark: #C2185B;
+  --color-magenta-50: #FCE4EC;
+  --color-magenta-100: #F8BBD0;
+  --color-magenta-200: #F48FB1;
+  --color-magenta-300: #F06292;
+  --color-magenta-400: #EC407A;
+  --color-magenta-500: #E91E63;
+  --color-magenta-600: #D81B60;
+  --color-magenta-700: #C2185B;
+  --color-magenta-800: #AD1457;
+  --color-magenta-900: #880E4F;
+
+  --color-yellow: #FFC107;
+  --color-yellow-light: #FFD54F;
+  --color-yellow-dark: #FFA000;
+  --color-yellow-50: #FFF8E1;
+  --color-yellow-100: #FFECB3;
+  --color-yellow-200: #FFE082;
+  --color-yellow-300: #FFD54F;
+  --color-yellow-400: #FFCA28;
+  --color-yellow-500: #FFC107;
+  --color-yellow-600: #FFB300;
+  --color-yellow-700: #FFA000;
+  --color-yellow-800: #FF8F00;
+  --color-yellow-900: #FF6F00;
+
+  /* Black - accent only, never dominant */
+  --color-black: #1A1A1A;
+  --color-black-light: #2D2D2D;
+  --color-black-soft: #333333;
+
+  /* White spectrum */
+  --color-white: #FFFFFF;
+  --color-white-warm: #FAFAF8;
+  --color-white-cream: #F7F6F3;
+
+  /* Soft neutrals */
+  --color-neutral-50: #FAFAF8;
+  --color-neutral-100: #F5F5F0;
+  --color-neutral-200: #EDEDEA;
+  --color-neutral-300: #D4D4CF;
+  --color-neutral-400: #A3A39E;
+  --color-neutral-500: #737370;
+  --color-neutral-600: #5C5C59;
+  --color-neutral-700: #434340;
+  --color-neutral-800: #2D2D2B;
+  --color-neutral-900: #1A1A18;
+
+  /* ========================================================================
+     Semantic Tokens - Day Mode (Default)
+     Warm, bright, editorial feel
+     ======================================================================== */
+  --bg-primary: #FAFAF8;
+  --bg-secondary: #F5F5F0;
+  --bg-tertiary: #EDEDEA;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay: rgba(26, 26, 24, 0.5);
+
+  --text-primary: #1A1A18;
+  --text-secondary: #5C5C59;
+  --text-tertiary: #737370;
+  --text-inverse: #FAFAF8;
+
+  --accent-primary: #00BCD4;
+  --accent-secondary: #E91E63;
+  --accent-tertiary: #FFC107;
+
+  --border-primary: #EDEDEA;
+  --border-secondary: #D4D4CF;
+  --border-focus: #00BCD4;
+
+  --surface-card: #FFFFFF;
+  --surface-card-hover: #F5F5F0;
+
+  /* Gradients */
+  --gradient-cmyk: linear-gradient(135deg, #00BCD4, #E91E63, #FFC107);
+  --gradient-primary: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+  --gradient-surface: linear-gradient(180deg, #FAFAF8 0%, #F5F5F0 100%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(26, 26, 24, 0.04);
+  --shadow-md: 0 4px 12px rgba(26, 26, 24, 0.06);
+  --shadow-lg: 0 12px 32px rgba(26, 26, 24, 0.08);
+  --shadow-xl: 0 24px 64px rgba(26, 26, 24, 0.12);
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Typography */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Instrument Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.75rem;
+  --font-size-7xl: 4.5rem;
+
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+}
+
+/* ==========================================================================
+   Dark Theme (Night Mode)
+   Elegant, cinematic, immersive - NOT pure black
+   ========================================================================== */
+[data-theme='dark'] {
+  --bg-primary: #1C1C1E;
+  --bg-secondary: #242426;
+  --bg-tertiary: #2C2C2E;
+  --bg-elevated: #2C2C2E;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+
+  --text-primary: #F5F5F0;
+  --text-secondary: #A3A39E;
+  --text-tertiary: #737370;
+  --text-inverse: #1A1A18;
+
+  --accent-primary: #4DD0E1;
+  --accent-secondary: #F06292;
+  --accent-tertiary: #FFD54F;
+
+  --border-primary: #2C2C2E;
+  --border-secondary: #434340;
+  --border-focus: #4DD0E1;
+
+  --surface-card: #242426;
+  --surface-card-hover: #2C2C2E;
+
+  /* Dark mode gradients */
+  --gradient-cmyk: linear-gradient(135deg, #4DD0E1, #F06292, #FFD54F);
+  --gradient-primary: linear-gradient(135deg, #4DD0E1 0%, #00BCD4 100%);
+  --gradient-surface: linear-gradient(180deg, #1C1C1E 0%, #242426 100%);
+
+  /* Dark mode shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
