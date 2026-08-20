@@ -40,5 +40,5 @@
     "Create a new project with images, verify it appears in the project list and on the public portfolio"
   ],
   "blocked_reason": null,
-  "findings": "Restructured app directory to use (site) route group for public pages (with Navigation/Footer) and separate /admin/ routes without the main site chrome. Build compiles all 11 routes successfully. Admin panel uses AdminShell wrapper component for auth protection rather than a (protected) route group layout."
+  "findings": "Fixed 2 remaining v2 review issues: (1) Removed admin middleware bypass via next-router-state-tree header - JWT is now bridged to a cookie on login/logout so middleware always has access to verify auth. (2) Made CSP conditional on NODE_ENV so unsafe-eval is only included in development builds, not production."
 }
