@@ -1,0 +1,44 @@
+{
+  "id": "FEAT-007",
+  "type": "feat",
+  "description": "Admin panel - Complete portfolio management system with authentication, CRUD operations, image upload, project reordering, and publish/unpublish functionality.",
+  "status": "completed",
+  "steps": [
+    "Create packages/frontend/src/app/admin/login/page.tsx - Admin login page: centered card with email/password form, 1PLUS branding, error display, redirects to /admin/dashboard on success. Clean, minimal design consistent with main site theme",
+    "Create packages/frontend/src/app/admin/layout.tsx - Admin layout: sidebar navigation (Dashboard, Projects, Add New, Settings), header with user info and logout button, main content area. Protected by auth check - redirects to login if no valid token",
+    "Create packages/frontend/src/app/admin/dashboard/page.tsx - Admin dashboard: project count stats, recent projects list, quick actions (Add New Project button). Simple overview cards",
+    "Create packages/frontend/src/app/admin/projects/page.tsx - Project list: table/list view of all projects with columns (thumbnail, title, category, status, date, actions). Sortable by date/title. Status badges (published/draft). Edit and Delete action buttons per row. Bulk actions possible",
+    "Create packages/frontend/src/app/admin/projects/new/page.tsx - New project form: title (text input), description (textarea/rich text), category (select/dropdown), client name (text), project date (date picker), external URL (url input), technologies/tags (tag input - comma separated), status (published/draft radio). Image upload zone with drag-and-drop, preview thumbnails, ability to set primary image. Submit creates project via POST /api/projects",
+    "Create packages/frontend/src/app/admin/projects/[id]/edit/page.tsx - Edit project form: same as create but pre-populated with existing data. Fetches project on load. Existing images shown with delete option. Save updates via PUT /api/projects/:id",
+    "Create packages/frontend/src/components/admin/ImageUpload.tsx - Drag-and-drop image upload component: shows upload zone, accepts jpg/png/webp, shows upload progress, displays thumbnails of uploaded images, allows reordering (drag to reorder), delete button per image. Validates file type and size (max 5MB) client-side before upload",
+    "Create packages/frontend/src/components/admin/ProjectForm.tsx - Reusable form component used by both create and edit pages. Includes client-side validation (required fields: title, description, category), error display per field, loading state on submit",
+    "Create packages/frontend/src/components/admin/TagInput.tsx - Tag input component: type text + Enter to add tag, click X to remove, displays as colored pills",
+    "Create packages/frontend/src/lib/auth.ts - Auth utility: login function (POST /api/auth/login), stores JWT in httpOnly considerations or localStorage with token refresh awareness, logout function (clears token), getToken helper, isAuthenticated check",
+    "Create packages/frontend/src/hooks/useAuth.ts - Auth hook/context: provides current auth state, login/logout functions, wraps protected routes",
+    "Create packages/frontend/src/app/admin/projects/reorder/page.tsx - Project reorder page: drag-and-drop list of all projects to set display order, save order button sends PUT /api/projects/reorder with new order array",
+    "Implement delete confirmation modal before project deletion",
+    "Ensure admin panel works well on tablet (responsive sidebar collapses to hamburger)"
+  ],
+  "acceptance_criteria": [
+    "Admin login authenticates against backend and stores JWT",
+    "Unauthenticated users are redirected to login page",
+    "Project list displays all projects with correct status badges",
+    "Create project form submits successfully and new project appears in list",
+    "Edit project form loads existing data and saves changes",
+    "Image upload works via drag-and-drop with progress indication",
+    "File type validation rejects non-image files",
+    "Delete project shows confirmation and removes project",
+    "Project reorder saves new display order",
+    "Publish/unpublish toggle works correctly",
+    "Admin panel is responsive on tablet and desktop",
+    "Logout clears auth state and redirects to login"
+  ],
+  "verification": [
+    "Run npm run build from root and confirm frontend compiles without errors",
+    "Start both frontend and backend servers",
+    "Navigate to /admin/login, log in with seeded admin credentials",
+    "Create a new project with images, verify it appears in the project list and on the public portfolio"
+  ],
+  "blocked_reason": null,
+  "findings": "Restructured app directory to use (site) route group for public pages (with Navigation/Footer) and separate /admin/ routes without the main site chrome. Build compiles all 11 routes successfully. Admin panel uses AdminShell wrapper component for auth protection rather than a (protected) route group layout."
+}

@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { Navigation } from '@/components/navigation/Navigation';
-import { Footer } from '@/components/footer/Footer';
 import { themeInitScript } from '@/lib/theme';
 
 const inter = Inter({
@@ -48,11 +45,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          <Navigation />
-          <main id="main-content">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

@@ -1,0 +1,103 @@
+'use client';
+
+import { API_BASE_URL } from './api';
+
+const TOKEN_KEY = '1plus_admin_token';
+const USER_KEY = '1plus_admin_user';
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string | null;
+}
+
+export interface LoginResponse {
+  token: string;
+  expiresIn: number;
+  user: AuthUser;
+}
+
+/**
+ * Store the JWT token in localStorage
+ */
+export function setToken(token: string): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+}
+
+/**
+ * Get the JWT token from localStorage
+ */
+export function getToken(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+  return null;
+}
+
+/**
+ * Store user data in localStorage
+ */
+export function setUser(user: AuthUser): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+}
+
+/**
+ * Get user data from localStorage
+ */
+export function getUser(): AuthUser | null {
+  if (typeof window !== 'undefined') {
+    const data = localStorage.getItem(USER_KEY);
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Check if user is authenticated (has a token)
+ */
+export function isAuthenticated(): boolean {
+  return !!getToken();
+}
+
+/**
+ * Login with email and password
+ */
+export async function login(email: string, password: string): Promise<LoginResponse> {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.error || 'Login failed');
+  }
+
+  const { token, expiresIn, user } = data.data;
+  setToken(token);
+  setUser(user);
+
+  return { token, expiresIn, user };
+}
+
+/**
+ * Logout - clear all auth data
+ */
+export function logout(): void {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+}
