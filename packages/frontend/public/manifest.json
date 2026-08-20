@@ -1,0 +1,20 @@
+{
+  "name": "1PLUS Creative Digital Studio",
+  "short_name": "1PLUS",
+  "description": "Premium creative digital studio specializing in branding, web development, and immersive digital experiences.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#00BCD4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["design", "business"],
+  "lang": "en"
+}
