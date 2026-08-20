@@ -68,7 +68,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      id="hero"
+      id="home"
       className="hero-section"
       aria-label="Hero - 1PLUS Creative Studio"
     >
