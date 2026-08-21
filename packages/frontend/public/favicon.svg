@@ -1,11 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <defs>
-    <linearGradient id="cmyk-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00BCD4"/>
-      <stop offset="50%" stop-color="#E91E63"/>
-      <stop offset="100%" stop-color="#FFC107"/>
-    </linearGradient>
-  </defs>
+  <!-- 1PLUS favicon - just the "1+" icon mark -->
+  
+  <!-- Dark rounded background -->
   <rect width="32" height="32" rx="6" fill="#1A1A1A"/>
-  <text x="16" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="14" fill="url(#cmyk-grad)">1+</text>
+  
+  <!-- Stylized "1" with CMYK overlapping colors -->
+  <!-- Yellow layer -->
+  <polygon points="13,4 17,4 17,24 13,24" fill="#FFF200" opacity="0.9"/>
+  
+  <!-- Cyan layer -->
+  <polygon points="10,6 15,3 15,23 10,23" fill="#00AEEF" opacity="0.85"/>
+  
+  <!-- Magenta layer -->
+  <polygon points="15,5 20,3 20,23 15,23" fill="#EC008C" opacity="0.8"/>
+  
+  <!-- White "+" cross symbol -->
+  <rect x="12" y="10.5" width="7" height="1.8" rx="0.4" fill="#FFFFFF"/>
+  <rect x="14.2" y="8" width="1.8" height="7" rx="0.4" fill="#FFFFFF"/>
+  
+  <!-- Four CMYK dots at bottom -->
+  <circle cx="9" cy="28" r="1.8" fill="#00AEEF"/>
+  <circle cx="13.5" cy="28" r="1.8" fill="#EC008C"/>
+  <circle cx="18" cy="28" r="1.8" fill="#FFF200"/>
+  <circle cx="22.5" cy="28" r="1.8" fill="none" stroke="#FFFFFF" stroke-width="0.8"/>
 </svg>

@@ -1,29 +1,44 @@
 # Asset Placement Guide
 
-This directory contains placeholder assets for the 1PLUS website. Replace these with final brand assets when available.
+This directory contains brand assets for the 1PLUS (BIR+) website.
 
 ## Logo Assets
 
 | File | Purpose | Recommended Dimensions |
 |------|---------|----------------------|
-| `placeholder-logo.svg` | Primary brand logo (SVG preferred for crisp rendering) | 120x40px base, scales responsively |
-| `logo-dark.svg` | Logo variant for dark backgrounds | Same as above |
-| `logo-light.svg` | Logo variant for light backgrounds | Same as above |
-| `favicon.svg` | Browser tab icon | 32x32px |
-| `logo-icon.svg` | Square icon-only mark (no text) | 48x48px |
+| `logo.svg` | Primary brand logo - SVG with CMYK "1+" mark and "BIR+" text | 240x80px viewBox, scales responsively |
+| `logo.jpg` | Brand logo raster version (replace with actual high-res file) | 800x300px recommended |
+| `../favicon.svg` | Browser tab icon - "1+" mark only | 32x32px |
+
+## Avatar / Brand Face
+
+| File | Purpose | Recommended Dimensions |
+|------|---------|----------------------|
+| `avatar.jpg` | Brand representative / ambassador photo | 800x1120px recommended (portrait) |
 
 ## Other Assets
 
 | File | Purpose | Recommended Dimensions |
 |------|---------|----------------------|
-| `og-image.jpg` | Open Graph / social sharing image | 1200x630px |
-| `avatar.jpg` | Default team member avatar | 400x400px |
-| `hero-bg.jpg` | Fallback hero background (if 3D fails) | 1920x1080px |
+| `../og-image.png` | Open Graph / social sharing image | 1200x630px |
+
+## Brand Colors (CMYK Palette)
+
+- **Cyan**: #00AEEF
+- **Magenta**: #EC008C
+- **Yellow**: #FFF200
+- **Key (Black)**: #1A1A1A
+
+## How to Replace Placeholder Images
+
+1. Replace `logo.jpg` with the actual brand logo photograph/render
+2. Replace `avatar.jpg` with the actual brand ambassador photograph
+3. Both files should be optimized JPEG format, under 200KB if possible
+4. The SVG files (`logo.svg`, `favicon.svg`) are already production-ready
 
 ## Guidelines
 
-- Use SVG format for logos and icons where possible
-- Optimize raster images (WebP preferred, JPEG fallback)
-- Keep file sizes under 200KB for performance
-- Ensure logos work on both light and dark backgrounds
+- The SVG logo uses `currentColor` for text, so it adapts to light/dark themes automatically
+- The magenta "+" accent (#EC008C) is always colored regardless of theme
 - Maintain minimum clear space around the logo mark
+- Avatar images should be portrait-oriented for the hero section layout

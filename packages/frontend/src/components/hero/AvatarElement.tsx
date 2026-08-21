@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { useMousePosition } from '@/hooks/useMousePosition';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 
@@ -9,8 +10,9 @@ interface AvatarElementProps {
 }
 
 /**
- * Avatar placeholder with CSS parallax effect driven by mouse position.
- * Uses a placeholder silhouette SVG with subtle floating animation.
+ * Brand ambassador avatar with CSS parallax effect driven by mouse position.
+ * Displays the actual avatar image with subtle floating animation and
+ * mouse-following parallax effects.
  */
 export function AvatarElement({ className = '' }: AvatarElementProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,44 +34,25 @@ export function AvatarElement({ className = '' }: AvatarElementProps) {
       }}
     >
       <div className="hero-avatar__inner">
-        <svg
-          viewBox="0 0 200 280"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="hero-avatar__svg"
-          aria-hidden="true"
-        >
-          <circle cx="100" cy="70" r="40" fill="var(--accent-primary)" opacity="0.3" />
-          <circle cx="100" cy="70" r="35" fill="var(--accent-primary)" opacity="0.2" />
-          <path
-            d="M50 280 C50 180 70 150 100 140 C130 150 150 180 150 280"
-            fill="var(--accent-secondary)"
-            opacity="0.25"
+        <div className="hero-avatar__image-wrapper">
+          <Image
+            src="/images/avatar.jpg"
+            alt="1PLUS brand representative"
+            width={400}
+            height={560}
+            className="hero-avatar__image"
+            priority
+            style={{
+              objectFit: 'cover',
+              borderRadius: '16px',
+              width: '100%',
+              height: '100%',
+            }}
           />
-          <circle
-            cx="100"
-            cy="140"
-            r="80"
-            stroke="var(--accent-primary)"
-            strokeWidth="1"
-            fill="none"
-            opacity="0.3"
-          >
-            <animate attributeName="r" values="75;85;75" dur="4s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.3;0.1;0.3" dur="4s" repeatCount="indefinite" />
-          </circle>
-          <circle
-            cx="100"
-            cy="140"
-            r="50"
-            stroke="var(--accent-tertiary)"
-            strokeWidth="0.5"
-            fill="none"
-            opacity="0.4"
-          >
-            <animate attributeName="r" values="45;55;45" dur="3s" repeatCount="indefinite" />
-          </circle>
-        </svg>
+          {/* Decorative ring around avatar */}
+          <div className="hero-avatar__ring" aria-hidden="true" />
+          <div className="hero-avatar__ring hero-avatar__ring--outer" aria-hidden="true" />
+        </div>
       </div>
     </div>
   );
